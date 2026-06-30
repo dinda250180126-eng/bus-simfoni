@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin - Bus Simfoni</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h2 { color: #38bdf8; margin: 0; }
+        .logout { padding: 8px 16px; background: #ef4444; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; text-align: center; }
+        .stat-card h3 { margin: 0; color: #94a3b8; font-size: 14px; text-transform: uppercase; }
+        .stat-card p { margin: 10px 0 0 0; font-size: 28px; font-weight: bold; color: #10b981; }
+        .table-box { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 12px; border-bottom: 2px solid #334155; color: #38bdf8; }
+        td { padding: 12px; border-bottom: 1px solid #334155; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>📊 Dashboard Owner Bus Simfoni (Admin)</h2>
+            <a href="/logout" class="logout">Keluar Sistem</a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Kursi Terjual</h3>
+                <p>{{ stats[0] }} Tiket</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Kas Pemasukan</h3>
+                <p>Rp {{ stats[1] if stats[1] else 0 }}</p>
+            </div>
+        </div>
+
+        <div class="table-box">
+            <h3 style="margin-top:0; color: #38bdf8; margin-bottom: 15px;">📋 Manifes Seluruh Penumpang Terdaftar</h3>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Penumpang</th>
+                    <th>Asal → Tujuan</th>
+                    <th>No. Kursi</th>
+                    <th>Setoran Bersih</th>
+                    <th>Metode Bayar</th>
+                </tr>
+                {% for p in pesanan %}
+                <tr>
+                    <td>#00{{ p[0] }}</td>
+                    <td><b>{{ p[1] }}</b></td>
+                    <td>{{ p[2] }} ➔ {{ p[3] }}</td>
+                    <td style="color:#38bdf8; font-weight:bold;">{{ p[4] }}</td>
+                    <td style="color:#10b981; font-weight:bold;">Rp {{ p[5] }}</td>
+                    <td><small>{{ p[6] }}</small></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>

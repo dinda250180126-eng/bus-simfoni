@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar - Bus Simfoni</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 380px; text-align: center; border: 1px solid #334155; }
+        h2 { color: #38bdf8; margin-bottom: 24px; }
+        label { display: block; text-align: left; margin-bottom: 6px; color: #94a3b8; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #059669; }
+        p { margin-top: 20px; color: #64748b; font-size: 14px; }
+        a { color: #10b981; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Buat Akun Baru</h2>
+        <form method="POST">
+            <label>Nama Lengkap</label>
+            <input type="text" name="nama" placeholder="Nama Anda" required>
+            <label>Email</label>
+            <input type="email" name="email" placeholder="email@gmail.com" required>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="******" required>
+            <button type="submit">Daftar Sekarang</button>
+        </form>
+        <p>Sudah punya akun? <a href="/login">Login di sini</a></p>
+    </div>
+</body>
+</html>

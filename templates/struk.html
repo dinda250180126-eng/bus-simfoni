@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Struk E-Tiket Digital</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .timer-box { background: #fef2f2; border: 1px solid #fee2e2; color: #991b1b; padding: 12px 25px; border-radius: 8px; font-weight: bold; margin-bottom: 20px; font-size: 15px; text-align: center; width: 100%; max-width: 400px; box-sizing: border-box; }
+        .struk-box { background: white; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 420px; color: #1e293b; font-family: 'Courier New', monospace; box-sizing: border-box; border-top: 10px solid #0ea5e9; }
+        .center { text-align: center; }
+        .garis { border-top: 2px dashed #cbd5e1; margin: 15px 0; }
+        .flex-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
+        .status-lunas { background: #d1fae5; color: #065f46; padding: 4px 10px; font-weight: bold; border-radius: 4px; font-family: sans-serif; }
+        .btn-group { margin-top: 25px; display: flex; gap: 15px; width: 100%; max-width: 420px; }
+        .btn { flex: 1; padding: 12px; text-align: center; text-decoration: none; border-radius: 8px; font-family: sans-serif; font-weight: bold; font-size: 14px; cursor: pointer; border: none; }
+        .btn-blue { background: #0ea5e9; color: white; }
+        .btn-green { background: #10b981; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="timer-box">
+        Selesaikan Pembayaran Dalam: <span id="countdown">10:00</span>
+    </div>
+
+    <div class="struk-box" id="cetak-area">
+        <div class="center">
+            <h2 style="margin: 0; color: #0ea5e9; font-family: sans-serif; font-weight: 800;">BUS SIMFONI TOURS</h2>
+            <p style="font-size: 11px; margin: 5px 0; color: #64748b;">Manifes Validasi Mahasiswa Universitas Malikussaleh</p>
+            <h3 style="margin-top: 10px; font-size: 16px;">E-TIKET RESMI PENUMPANG</h3>
+        </div>
+        
+        <div class="garis"></div>
+        
+        <div class="flex-row"><span>No. Transaksi:</span> <span>#BS-090{{ s[0] }}</span></div>
+        <div class="flex-row"><span>Nama Penumpang:</span> <span><b>{{ s[1] }}</b></span></div>
+        <div class="flex-row"><span>NIK KTP:</span> <span>{{ s[9] }}</span></div>
+        <div class="flex-row"><span>Jenis Kelamin:</span> <span>{{ s[10] }}</span></div>
+        
+        <div class="garis"></div>
+        
+        <div class="flex-row"><span>Rute Asal:</span> <span><b>{{ s[2] }}</b></span></div>
+        <div class="flex-row"><span>Rute Tujuan:</span> <span><b>{{ s[3] }}</b></span></div>
+        <div class="flex-row"><span>Jam Berangkat:</span> <span>{{ s[4] }}</span></div>
+        <div class="flex-row"><span>Nomor Kursi:</span> <span style="color: #0ea5e9; font-weight: bold; font-size: 18px;">{{ s[6] }}</span></div>
+        
+        <div class="garis"></div>
+        
+        <div class="flex-row"><span>Harga Normal:</span> <span>Rp {{ s[12] }}</span></div>
+        <div class="flex-row" style="color: #ef4444;"><span>Potongan Voucher:</span> <span>-Rp {{ s[11] }}</span></div>
+        <div class="flex-row" style="font-size: 16px; font-weight: bold; color: #10b981;"><span>Total Bayar:</span> <span>Rp {{ s[5] }}</span></div>
+        <div class="flex-row"><span>Status Tiket:</span> <span class="status-lunas">{{ s[8] }}</span></div>
+        
+        <div class="garis"></div>
+        <p class="center" style="font-size: 11px; color: #64748b;">Simpan E-Tiket PDF ini untuk ditunjukkan ke petugas di pintu loket masuk terminal bus.</p>
+    </div>
+
+    <div class="btn-group">
+        <a href="/jadwal" class="btn btn-blue">Kembali Ke Jadwal</a>
+        <button onclick="downloadPDF()" class="btn btn-green">Unduh File PDF</button>
+    </div>
+
+    <script>
+        // Logika Script Unduh PDF Otomatis
+        function downloadPDF() {
+            const element = document.getElementById('cetak-area');
+            const opsi = {
+                margin:       1,
+                filename:     'Tiket_Bus_Simfoni_'+{{ s[0] }}+'.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opsi).from(element).save();
+        }
+
+        // Logika Script Countdown Timer 10 Menit
+        let waktu = 600; 
+        const display = document.getElementById('countdown');
+        setInterval(function () {
+            let menit = parseInt(waktu / 60, 10);
+            let detik = parseInt(waktu % 60, 10);
+            menit = menit < 10 ? "0" + menit : menit;
+            detik = detik < 10 ? "0" + detik : detik;
+            display.textContent = menit + ":" + detik;
+            if (--waktu < 0) {
+                alert("Waktu pembayaran Anda habis! Silahkan pesan ulang kursi.");
+                window.location.href = "/jadwal";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Manifes Penumpang & Kursi</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
+        .container { max-width: 900px; margin: 0 auto; background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; display: flex; gap: 40px; }
+        .left-panel { flex: 1.1; text-align: center; }
+        .right-panel { flex: 1; border-left: 1px solid #334155; padding-left: 40px; }
+        h3 { color: #38bdf8; margin-top: 0; }
+        .denah-bus { display: grid; grid-template-columns: repeat(2, 60px) 30px repeat(2, 60px); gap: 12px; justify-content: center; margin-top: 25px; background: #0f172a; padding: 20px; border-radius: 12px; border: 1px solid #334155; }
+        .kursi-kosong { background-color: #10b981; color: white; padding: 12px; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 14px; width: 100%; transition: 0.2s; }
+        .kursi-kosong:hover { background-color: #059669; }
+        .kursi-terisi { background-color: #ef4444; color: white; padding: 12px; border: none; cursor: not-allowed; border-radius: 8px; font-weight: bold; font-size: 14px; width: 100%; opacity: 0.6; }
+        .jalan { background: transparent; }
+        label { display: block; font-weight: 500; margin-bottom: 6px; color: #94a3b8; margin-top: 15px; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; background: #0f172a; border-radius: 8px; border: 1px solid #334155; color: white; font-size: 14px; box-sizing: border-box; }
+        input:focus, select:focus { border-color: #38bdf8; outline: none; }
+        .alert-info { background: #1e3a8a; padding: 15px; border-radius: 8px; color: #93c5fd; font-size: 14px; margin-bottom: 20px; border-left: 4px solid #38bdf8; }
+        .back-btn { display: inline-block; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="POST" style="display: flex; width: 100%; gap: 40px; margin: 0;">
+            <div class="left-panel">
+                <h3>Pilih Kursi Penumpang</h3>
+                <div style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">
+                    <span style="color: #10b981;">■</span> Tersedia &nbsp;&nbsp;&nbsp; <span style="color: #ef4444;">■</span> Terisi
+                </div>
+                <div class="denah-bus">
+                    {% for b in semua_bangku %}
+                        {% if b in bangku_terisi %}
+                            <button type="button" class="kursi-terisi" disabled>{{ b }}</button>
+                        {% else %}
+                            <button type="submit" name="nomor_bangku" value="{{ b }}" class="kursi-kosong" onclick="return confirm('Pesan kursi ' + this.value + ' dengan data manifes Anda?')">{{ b }}</button>
+                        {% endif %}
+                        {% if loop.index % 2 == 0 and loop.index % 4 != 0 %}
+                            <div class="jalan"></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h3>Data Manifes Penumpang</h3>
+                <div class="alert-info">
+                    <b>Rute:</b> {{ detail_jadwal[1] }} → {{ detail_jadwal[2] }}<br>
+                    <b>Harga Normal:</b> Rp {{ detail_jadwal[4] }}
+                </div>
+                
+                <label>Nama Sesuai KTP:</label>
+                <input type="text" name="nama_penumpang" placeholder="Nama Lengkap" required>
+                
+                <label>Nomor NIK KTP:</label>
+                <input type="text" name="nik" maxlength="16" placeholder="16 Digit NIK" required>
+                
+                <label>Jenis Kelamin:</label>
+                <select name="jenis_kelamin" required>
+                    <option value="Laki-Laki">Laki-Laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+                
+                <label>Kode Voucher Promo (Opsional):</label>
+                <input type="text" name="kode_promo" placeholder="Masukkan voucher: UNIMALKEREN">
+                
+                <label>Metode Pembayaran:</label>
+                <select name="metode_bayar" required>
+                    <option value="Transfer Bank BCA (No. Rek: 8932-112-22)">Transfer BCA (8932-112-22)</option>
+                    <option value="DANA E-Wallet (0822-1111-2222)">DANA (0822-1111-2222)</option>
+                    <option value="Bayar Tunai di Loket Terminal">Tunai di Loket Terminal</option>
+                </select>
+                <br><br>
+                <a href="/jadwal" class="back-btn">← Kembali</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

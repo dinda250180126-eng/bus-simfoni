@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Bus Simfoni</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 380px; text-align: center; border: 1px solid #334155; }
+        h2 { color: #38bdf8; margin-bottom: 24px; font-weight: 700; }
+        label { display: block; text-align: left; margin-bottom: 6px; color: #94a3b8; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; box-sizing: border-box; }
+        input:focus { border-color: #38bdf8; outline: none; }
+        button { width: 100%; padding: 12px; background: #0ea5e9; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0284c7; }
+        p { margin-top: 20px; color: #64748b; font-size: 14px; }
+        a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Bus Simfoni</h2>
+        <form method="POST">
+            <label>Email Penumpang / Admin</label>
+            <input type="email" name="email" placeholder="contoh: dinda@gmail.com" required>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="******" required>
+            <button type="submit">Masuk Ke Sistem</button>
+        </form>
+        <p>Belum punya akun? <a href="/daftar">Daftar Akun</a></p>
+    </div>
+</body>
+</html>
