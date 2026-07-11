@@ -1,11 +1,63 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+import logging
+import os
+import shutil
 import sqlite3
+import tempfile
 from datetime import datetime, timedelta
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__)
 app.secret_key = 'bus_super_rahasia_unimal'
+app.logger.setLevel(logging.INFO)
 
-DB_PATH = 'tiket_bus.db'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_DB_PATH = os.path.join(BASE_DIR, 'tiket_bus.db')
+TMP_DB_PATH = os.path.join(tempfile.gettempdir(), 'tiket_bus.db')
+
+
+def is_database_writable(path):
+    try:
+        conn = sqlite3.connect(f'file:{path}?mode=rw', uri=True)
+        conn.close()
+        return True
+    except sqlite3.OperationalError:
+        return False
+
+
+def determine_db_path():
+    env_path = os.environ.get('DATABASE_FILE')
+    if env_path:
+        return env_path
+
+    if os.path.exists(DEFAULT_DB_PATH):
+        if is_database_writable(DEFAULT_DB_PATH):
+            return DEFAULT_DB_PATH
+        app.logger.info('Default DB exists but is read-only, copying to temp DB.')
+        try:
+            os.makedirs(os.path.dirname(TMP_DB_PATH), exist_ok=True)
+            shutil.copy(DEFAULT_DB_PATH, TMP_DB_PATH)
+            return TMP_DB_PATH
+        except OSError:
+            app.logger.exception('Unable to copy default database to temp DB.')
+
+    if os.access(BASE_DIR, os.W_OK):
+        return DEFAULT_DB_PATH
+
+    app.logger.info('Using temp database because project root is not writable.')
+    try:
+        os.makedirs(os.path.dirname(TMP_DB_PATH), exist_ok=True)
+        conn = sqlite3.connect(TMP_DB_PATH)
+        conn.close()
+        return TMP_DB_PATH
+    except sqlite3.OperationalError as exc:
+        raise RuntimeError(
+            f"Unable to create database in default path {DEFAULT_DB_PATH} "
+            f"or temp path {TMP_DB_PATH}."
+        ) from exc
+
+
+DB_PATH = determine_db_path()
+app.logger.info(f"Using database file: {DB_PATH}")
 
 
 def get_db_connection():
@@ -239,15 +291,15 @@ def pilih_bangku(jadwal_id):
                 total_bayar = max(harga_asli - potongan, 0)
                 user_id = session['user_id']
 
-                #cursor.execute(
-                    #"""
-                    #INSERT INTO pesanan (
-                        #penumpang_id, jadwal_id, nomor_bangku, nama_penumpang, nik,
-                        #jenis_kelamin, metode_bayar, potongan, total_bayar, status, created_at
-                    #) #VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Menunggu Pembayaran', CURRENT_TIMESTAMP)
-                    #""",
-                    #(user_id, jadwal_id, nomor_bangku, nama_penumpang, nik, jenis_kelamin, metode_bayar, potongan, total_bayar),
-                #)
+                cursor.execute(
+                    """
+                    INSERT INTO pesanan (
+                        penumpang_id, jadwal_id, nomor_bangku, nama_penumpang, nik,
+                        jenis_kelamin, metode_bayar, potongan, total_bayar, status, created_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Menunggu Pembayaran', CURRENT_TIMESTAMP)
+                    """,
+                    (user_id, jadwal_id, nomor_bangku, nama_penumpang, nik, jenis_kelamin, metode_bayar, potongan, total_bayar),
+                )
                 pesanan_id = cursor.lastrowid
 
                 return redirect(url_for('bukti_penambahan', pesanan_id=pesanan_id))
@@ -285,6 +337,10 @@ def bukti_penambahan(pesanan_id):
         )
         data_bukti = cursor.fetchone()
 
+    if data_bukti is None:
+        flash('Pesanan tidak ditemukan atau sudah dibatalkan.')
+        return redirect(url_for('jadwal'))
+
     return render_template('bukti_penambahan.html', b=data_bukti)
 
 
@@ -295,10 +351,13 @@ def konfirmasi_pembayaran(pesanan_id):
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        #cursor.execute(
-        #    "UPDATE pesanan SET status='Lunas' WHERE id=? AND penumpang_id=? AND status='Menunggu Pembayaran'",
-         #   (pesanan_id, session['user_id']),
-        #)
+        cursor.execute(
+            "UPDATE pesanan SET status='Lunas' WHERE id=? AND penumpang_id=? AND status='Menunggu Pembayaran'",
+            (pesanan_id, session['user_id']),
+        )
+        if cursor.rowcount == 0:
+            flash('Pembayaran tidak dapat dikonfirmasi. Pesanan mungkin sudah dibatalkan atau sudah lunas.')
+            return redirect(url_for('jadwal'))
 
     return redirect(url_for('bukti_penambahan', pesanan_id=pesanan_id))
 
@@ -322,6 +381,10 @@ def struk(pesanan_id):
             (pesanan_id,),
         )
         data_struk = cursor.fetchone()
+
+    if data_struk is None:
+        flash('Struk tidak ditemukan.')
+        return redirect(url_for('jadwal'))
 
     return render_template('struk.html', s=data_struk)
 
@@ -371,6 +434,10 @@ def bukti_pembatalan(pesanan_id):
         )
         data_bukti = cursor.fetchone()
 
+    if data_bukti is None:
+        flash('Pesanan pembatalan tidak ditemukan.')
+        return redirect(url_for('jadwal'))
+
     return render_template('bukti_pembatalan.html', b=data_bukti, pembatalan_time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 
@@ -378,6 +445,11 @@ def bukti_pembatalan(pesanan_id):
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    app.logger.error('Internal server error: %s', error)
+    return render_template('500.html', error=str(error)), 500
 
 
 if __name__ == '__main__':
