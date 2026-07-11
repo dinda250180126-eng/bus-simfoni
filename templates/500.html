@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Error</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8fafc; color: #0f172a; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .page { text-align: center; padding: 40px; max-width: 600px; }
+        .title { font-size: 38px; margin-bottom: 10px; }
+        .subtitle { font-size: 16px; color: #475569; margin-bottom: 25px; }
+        .box { background: white; border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12); }
+        .code { margin-top: 20px; color: #334155; font-family: monospace; white-space: pre-wrap; text-align: left; background: #f1f5f9; border-radius: 12px; padding: 15px; }
+        .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #0ea5e9; color: white; border-radius: 10px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="box">
+            <div class="title">500 - Internal Server Error</div>
+            <div class="subtitle">Maaf, terjadi kesalahan pada server. Silakan coba kembali nanti.</div>
+            {% if error %}
+            <div class="code">{{ error }}</div>
+            {% endif %}
+            <a class="btn" href="/">Kembali ke Beranda</a>
+        </div>
+    </div>
+</body>
+</html>
