@@ -239,12 +239,13 @@ def batal_pesanan(pesanan_id):
         pesanan = cursor.fetchone()
 
         if pesanan:
+            pass
             # cursor.execute(
             #     "UPDATE pesanan SET status='Dibatalkan' WHERE id=? AND penumpang_id=?",
             #     (pesanan_id, session['user_id']),
             # )
 
-    return redirect(url_for('bukti_pembatalan', pesanan_id=pesanan_id))
+        #return redirect(url_for('bukti_pembatalan', pesanan_id=pesanan_id))
 
 
 @app.route('/pilih_bangku/<int:jadwal_id>', methods=['GET', 'POST'])
