@@ -239,10 +239,10 @@ def batal_pesanan(pesanan_id):
         pesanan = cursor.fetchone()
 
         if pesanan:
-            cursor.execute(
-                "UPDATE pesanan SET status='Dibatalkan' WHERE id=? AND penumpang_id=?",
-                (pesanan_id, session['user_id']),
-            )
+            #cursor.execute(
+                #"UPDATE pesanan SET status='Dibatalkan' WHERE id=? AND penumpang_id=?",
+                #(pesanan_id, session['user_id']),
+            #)
 
     return redirect(url_for('bukti_pembatalan', pesanan_id=pesanan_id))
 
