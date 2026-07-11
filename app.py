@@ -295,10 +295,10 @@ def konfirmasi_pembayaran(pesanan_id):
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute(
-            "UPDATE pesanan SET status='Lunas' WHERE id=? AND penumpang_id=? AND status='Menunggu Pembayaran'",
-            (pesanan_id, session['user_id']),
-        )
+        #cursor.execute(
+        #    "UPDATE pesanan SET status='Lunas' WHERE id=? AND penumpang_id=? AND status='Menunggu Pembayaran'",
+         #   (pesanan_id, session['user_id']),
+        #)
 
     return redirect(url_for('bukti_penambahan', pesanan_id=pesanan_id))
 
