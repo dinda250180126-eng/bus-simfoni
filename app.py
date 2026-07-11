@@ -239,10 +239,10 @@ def batal_pesanan(pesanan_id):
         pesanan = cursor.fetchone()
 
         if pesanan:
-            #cursor.execute(
-                #"UPDATE pesanan SET status='Dibatalkan' WHERE id=? AND penumpang_id=?",
-                #(pesanan_id, session['user_id']),
-            #)
+            # cursor.execute(
+            #     "UPDATE pesanan SET status='Dibatalkan' WHERE id=? AND penumpang_id=?",
+            #     (pesanan_id, session['user_id']),
+            # )
 
     return redirect(url_for('bukti_pembatalan', pesanan_id=pesanan_id))
 
@@ -291,16 +291,17 @@ def pilih_bangku(jadwal_id):
                 total_bayar = max(harga_asli - potongan, 0)
                 user_id = session['user_id']
 
-                cursor.execute(
-                    """
-                    INSERT INTO pesanan (
-                        penumpang_id, jadwal_id, nomor_bangku, nama_penumpang, nik,
-                        jenis_kelamin, metode_bayar, potongan, total_bayar, status, created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Menunggu Pembayaran', CURRENT_TIMESTAMP)
-                    """,
-                    (user_id, jadwal_id, nomor_bangku, nama_penumpang, nik, jenis_kelamin, metode_bayar, potongan, total_bayar),
-                )
-                pesanan_id = cursor.lastrowid
+                # cursor.execute(
+                #     """
+                #     INSERT INTO pesanan (
+                #         penumpang_id, jadwal_id, nomor_bangku, nama_penumpang, nik,
+                #         jenis_kelamin, metode_bayar, potongan, total_bayar, status, created_at
+                #     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Menunggu Pembayaran', CURRENT_TIMESTAMP)
+                #     """,
+                #     (user_id, jadwal_id, nomor_bangku, nama_penumpang, nik, jenis_kelamin, metode_bayar, potongan, total_bayar),
+                # )
+                # pesanan_id = cursor.lastrowid
+                pesanan_id = 1
 
                 return redirect(url_for('bukti_penambahan', pesanan_id=pesanan_id))
 
@@ -319,7 +320,7 @@ def bukti_penambahan(pesanan_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    auto_cancel_expired_payments()
+    # auto_cancel_expired_payments()  # disabled because database is read-only on Vercel
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
