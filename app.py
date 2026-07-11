@@ -152,7 +152,7 @@ def jadwal():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    auto_cancel_expired_payments()
+    #auto_cancel_expired_payments()
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
