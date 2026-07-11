@@ -2,46 +2,289 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Keberangkatan Bus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
-        .container { max-width: 900px; margin: 0 auto; background: #1e293b; padding: 35px; border-radius: 16px; border: 1px solid #334155; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px; margin-bottom: 25px; }
-        h2 { margin: 0; color: #38bdf8; }
-        .logout-btn { padding: 8px 16px; background: #ef4444; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; }
-        th { background: #0f172a; color: #38bdf8; padding: 16px; font-weight: 600; border-bottom: 2px solid #334155; }
-        td { padding: 16px; border-bottom: 1px solid #334155; }
-        tr:hover { background: #24334d; transition: 0.2s; }
-        .order-btn { display: inline-block; padding: 8px 16px; background: #10b981; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 13px; }
-        .order-btn:hover { background: #059669; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+
+        /* Header Biru di Bagian Atas */
+        .app-header {
+            background-color: #2e3b8e;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Container Utama */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Desain Kartu Jadwal (Card) */
+        .schedule-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f5;
+        }
+
+        /* Baris Rute Perjalanan, Waktu, & Ikon Bus */
+        .route-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .location-block {
+            flex: 1;
+        }
+
+        .location-block.destination {
+            text-align: right;
+        }
+
+        .time {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 4px 0;
+        }
+
+        .city {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+        }
+
+        /* Indikator Panah Bus di Tengah */
+        .bus-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff4500;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 0 10px;
+        }
+
+        .bus-icon-svg {
+            width: 24px;
+            height: 24px;
+            fill: #555555;
+        }
+
+        /* Garis Pembatas Halus */
+        .divider {
+            border: none;
+            border-top: 1px solid #f0f0f0;
+            margin: 15px 0;
+        }
+
+        /* Detail Bus & Status Sisa Kursi */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .bus-info {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .bus-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444444;
+            margin: 0 0 4px 0;
+        }
+
+        .bus-class {
+            font-size: 12px;
+            color: #888888;
+            margin: 0;
+        }
+
+        /* Badge Sisa Kursi Biru Gelap */
+        .seats-badge {
+            background-color: #1a237e;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Baris Bawah: Harga & Tombol Aksi */
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-tag {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        /* Tombol Select Seat Oranye */
+        .select-btn {
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .select-btn:hover {
+            background-color: #e03d00;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>Selamat Datang, {{ session['nama'] }}!</h2>
-            <a href="/logout" class="logout-btn">Logout</a>
-        </div>
-        <p style="color: #94a3b8; margin-bottom: 20px;">Silahkan tentukan rute terminal tujuan Anda:</p>
-        <table>
-            <tr>
-                <th>Kota Asal</th>
-                <th>Kota Tujuan</th>
-                <th>Jam Berangkat</th>
-                <th>Tarif Tiket</th>
-                <th>Aksi</th>
-            </tr>
-            {% for j in list_jadwal %}
-            <tr>
-                <td><b>{{ j[1] }}</b></td>
-                <td><b>{{ j[2] }}</b></td>
-                <td>{{ j[3] }}</td>
-                <td style="color: #38bdf8; font-weight: bold;">Rp {{ j[4] }}</td>
-                <td><a href="/pilih_bangku/{{ j[0] }}" class="order-btn">Pilih Kursi & Pesan</a></td>
-            </tr>
-            {% endfor %}
-        </table>
+
+    <!-- Header Atas -->
+    <div class="app-header">
+        <a href="/" class="back-btn">←</a>
+        <h1 class="header-title">Pilih Jadwal Keberangkatan</h1>
     </div>
+
+    <!-- Konten Utama -->
+    <div class="container">
+        
+       <!-- GANTI KODE LOOPING LAMA KAMU DENGAN INI -->
+{% for j in list_jadwal %}
+<div class="schedule-card">
+    
+    <!-- Baris Waktu & Rute -->
+    <div class="route-row">
+        <div class="location-block">
+            <!-- j[3] adalah Jam Berangkat -->
+            <p class="time">{{ j[3] }}</p>
+            <!-- j[1] adalah Rute Asal -->
+            <p class="city">{{ j[1] }}</p>
+        </div>
+        
+        <div class="bus-indicator">
+            <svg class="bus-icon-svg" viewBox="0 0 24 24"><path d="M18 11H6V6h12v5m-1.5 7c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5m-9 0c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 18 7.5 18M4 16c0 .88.39 1.67 1 2.22V21c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-2.78c.61-.55 1-1.34 1-2.22V9c0-3.33-2.67-6-6-6H9C5.67 3 3 5.67 3 9v7z"/></svg>
+            <span>➔</span>
+            <svg class="bus-icon-svg" viewBox="0 0 24 24"><path d="M18 11H6V6h12v5m-1.5 7c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5m-9 0c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 18 7.5 18M4 16c0 .88.39 1.67 1 2.22V21c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-2.78c.61-.55 1-1.34 1-2.22V9c0-3.33-2.67-6-6-6H9C5.67 3 3 5.67 3 9v7z"/></svg>
+        </div>
+
+        <<div class="location-block destination">
+    <!-- Sekarang diisi dengan indeks 5 untuk Tanggal Berangkat -->
+    <p class="time" style="font-weight: 500; font-size: 14px; color: #666666;">{{ j[5] }}</p>
+    <!-- Rute Tujuan -->
+    <p class="city" style="font-size: 16px; font-weight: 700; color: #1a1a1a;">{{ j[2] }}</p>
+</div>
+    </div>
+
+    <!-- Detail Tipe Bus & Sisa Kursi -->
+    <div class="detail-row">
+        <div class="bus-info">
+            <!-- j[6] adalah Nama Bus / Armada -->
+            <p class="bus-name">{{ j[6] }}</p>
+            <p class="bus-class">TATA BS6 Executive A/C Sleeper</p>
+        </div>
+        <div class="seats-badge">
+            <!-- j[7] adalah Total Bangku / Sisa Kursi -->
+            {{ j[7] }} Kursi Tersisa
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Baris Bawah: Harga & Tombol Pemilihan -->
+    <!-- Baris Bawah: Harga & Tombol Pemilihan -->
+<div class="action-row">
+    <div class="price-tag">
+        <!-- j[4] dipindahkan ke sini dan diberi format titik -->
+        Rp {{ "{:,.0f}".format(j[4]).replace(',', '.') }}
+    </div>
+    <a href="/pilih_bangku/{{ j[0] }}" class="select-btn">Select Seat</a>
+</div>
+
+</div>
+{% endfor %}
+
+    <!-- Riwayat Pesanan (tampil di bawah jadwal, tidak mengubah tampilan kartu jadwal) -->
+    <div style="margin-top:24px;">
+        <h2 style="font-size:16px;margin:0 0 10px 0;color:#333;font-weight:600;">Riwayat Pesanan</h2>
+        {% if riwayat_pesanan and riwayat_pesanan|length > 0 %}
+            {% for r in riwayat_pesanan %}
+                <div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid #eef2f5;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <div style="font-weight:700;color:#222;">Kursi: {{ r[1] }} — {{ r[2] }}</div>
+                            <div style="font-size:13px;color:#666;margin-top:4px;">Total: Rp {{ r[3] }} · Dibuat: {{ r[5] }}</div>
+                        </div>
+                        <div style="text-align:right;">
+                            {% if r[4] == 'Dibatalkan' %}
+                                <div style="color:#b91c1c;font-weight:700;">{{ r[4] }}</div>
+                            {% else %}
+                                <div style="color:#166534;font-weight:700;">{{ r[4] }}</div>
+                            {% endif %}
+                            {% if r[4] != 'Dibatalkan' %}
+                                <form method="post" action="/batal_pesanan/{{ r[0] }}" style="margin-top:8px;">
+                                    <button type="submit" style="background:#ef4444;color:#fff;border:none;padding:6px 10px;border-radius:8px;font-weight:600;cursor:pointer;">Batalkan</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div style="color:#666">Belum ada riwayat pesanan.</div>
+        {% endif %}
+    </div>
+
+    </div>
+
 </body>
 </html>

@@ -47,6 +47,7 @@
                     <th>No. Kursi</th>
                     <th>Setoran Bersih</th>
                     <th>Metode Bayar</th>
+                    <th>Tanggal Pesan</th>
                 </tr>
                 {% for p in pesanan %}
                 <tr>
@@ -56,6 +57,7 @@
                     <td style="color:#38bdf8; font-weight:bold;">{{ p[4] }}</td>
                     <td style="color:#10b981; font-weight:bold;">Rp {{ p[5] }}</td>
                     <td><small>{{ p[6] }}</small></td>
+                    <td><small>{{ p[8] if p[8] else 'N/A' }}</small></td>
                 </tr>
                 {% endfor %}
             </table>

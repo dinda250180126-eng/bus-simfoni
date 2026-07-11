@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Bukti Penambahan Pesanan</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .bukti-box { background: white; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 500px; color: #1e293b; font-family: 'Courier New', monospace; box-sizing: border-box; border-left: 6px solid #10b981; }
+        .center { text-align: center; }
+        .garis { border-top: 2px dashed #cbd5e1; margin: 15px 0; }
+        .garis-tebal { border-top: 3px solid #0ea5e9; margin: 15px 0; }
+        .flex-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
+        .label { font-weight: bold; color: #0f172a; }
+        .value { color: #334155; }
+        .badge-success { background: #d1fae5; color: #065f46; padding: 6px 12px; font-weight: bold; border-radius: 4px; font-family: sans-serif; font-size: 12px; display: inline-block; }
+        .badge-info { background: #cffafe; color: #0c4a6e; padding: 6px 12px; font-weight: bold; border-radius: 4px; font-family: sans-serif; font-size: 12px; display: inline-block; }
+        .header-title { font-size: 18px; font-weight: 800; color: #10b981; margin: 0; font-family: sans-serif; }
+        .header-subtitle { font-size: 12px; color: #64748b; margin: 3px 0 0 0; font-family: sans-serif; }
+        .icon-check { font-size: 24px; margin-bottom: 10px; }
+        .info-section { margin: 15px 0; background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #38bdf8; }
+        .info-section .label { color: #0c4a6e; font-size: 12px; text-transform: uppercase; }
+        .btn-group { margin-top: 25px; display: flex; gap: 15px; width: 100%; max-width: 500px; }
+        .btn { flex: 1; padding: 12px; text-align: center; text-decoration: none; border-radius: 8px; font-family: sans-serif; font-weight: bold; font-size: 14px; cursor: pointer; border: none; }
+        .btn-blue { background: #0ea5e9; color: white; }
+        .btn-green { background: #10b981; color: white; }
+        .btn-blue:hover { background: #0284c7; }
+        .btn-green:hover { background: #059669; }
+        .timestamp { font-size: 11px; color: #94a3b8; margin-top: 10px; text-align: center; }
+        @media print {
+            body { background: white; padding: 0; }
+            .btn-group { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bukti-box" id="cetak-area">
+        <div class="center">
+            <div class="icon-check">✓</div>
+            <h2 class="header-title">BUKTI PENAMBAHAN PESANAN</h2>
+            <p class="header-subtitle">Bus Simfoni Tours - Universitas Malikussaleh</p>
+            <div style="margin-top: 10px;">
+                <span class="badge-success">PESANAN BERHASIL DITAMBAHKAN</span>
+            </div>
+        </div>
+
+        <div class="garis-tebal"></div>
+
+        <div class="info-section">
+            <div class="label">Nomor Referensi Transaksi</div>
+            <div style="font-size: 18px; font-weight: bold; color: #0ea5e9; margin-top: 5px;">#BS-090{{ b[0] }}</div>
+        </div>
+
+        <div class="info-section">
+            <div class="label">Waktu Pemesanan</div>
+            <div style="font-size: 14px; color: #1e293b; margin-top: 5px;">{{ b[13] if b[13] else 'N/A' }}</div>
+        </div>
+
+        <div class="info-section" style="background: #fef3c7; border-left-color: #f59e0b;">
+            <div class="label" style="color: #92400e;">Status Pembayaran</div>
+            <div style="font-size: 14px; color: #92400e; margin-top: 5px; font-weight: bold;">Menunggu pembayaran selama 10 menit. Jika tidak dibayar, pesanan akan otomatis dibatalkan.</div>
+            <div id="countdown" style="font-size: 16px; color: #b45309; margin-top: 8px; font-weight: 800;">10:00</div>
+        </div>
+
+        <div class="garis"></div>
+
+        <div style="margin: 12px 0;">
+            <div class="label" style="font-size: 12px; color: #0c4a6e; text-transform: uppercase;">Informasi Penumpang</div>
+            <div class="flex-row" style="margin-top: 8px;">
+                <span class="label">Nama Penumpang:</span>
+                <span class="value"><b>{{ b[1] }}</b></span>
+            </div>
+            <div class="flex-row">
+                <span class="label">No. KTP:</span>
+                <span class="value">{{ b[9] }}</span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Jenis Kelamin:</span>
+                <span class="value">{{ b[10] }}</span>
+            </div>
+        </div>
+
+        <div class="garis"></div>
+
+        <div style="margin: 12px 0;">
+            <div class="label" style="font-size: 12px; color: #0c4a6e; text-transform: uppercase;">Detail Perjalanan</div>
+            <div class="flex-row" style="margin-top: 8px;">
+                <span class="label">Rute Asal:</span>
+                <span class="value"><b>{{ b[2] }}</b></span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Rute Tujuan:</span>
+                <span class="value"><b>{{ b[3] }}</b></span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Jam Berangkat:</span>
+                <span class="value"><b>{{ b[4] }}</b></span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Nomor Kursi:</span>
+                <span style="color: #0ea5e9; font-weight: bold; font-size: 16px;">{{ b[6] }}</span>
+            </div>
+        </div>
+
+        <div class="garis"></div>
+
+        <div style="margin: 12px 0;">
+            <div class="label" style="font-size: 12px; color: #0c4a6e; text-transform: uppercase;">Ringkasan Pembayaran</div>
+            <div class="flex-row" style="margin-top: 8px;">
+                <span class="label">Harga Normal:</span>
+                <span class="value">Rp {{ b[12] }}</span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Potongan Voucher:</span>
+                <span class="value" style="color: #10b981;">-Rp {{ b[11] }}</span>
+            </div>
+            <div class="flex-row" style="font-size: 16px; font-weight: bold; color: #10b981;">
+                <span class="label">Total Bayar:</span>
+                <span>Rp {{ b[5] }}</span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Metode Pembayaran:</span>
+                <span class="value">{{ b[7] }}</span>
+            </div>
+            <div class="flex-row">
+                <span class="label">Status Pesanan:</span>
+                <span>
+                    {% if b[8] == 'Lunas' %}
+                    <span class="badge-success">{{ b[8] }}</span>
+                    {% elif b[8] == 'Menunggu Pembayaran' %}
+                    <span class="badge-info">{{ b[8] }}</span>
+                    {% else %}
+                    <span class="badge-info">{{ b[8] }}</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="garis"></div>
+
+        <p class="center" style="font-size: 12px; color: #64748b; margin: 15px 0 0 0;">
+            Bukti ini merupakan konfirmasi resmi bahwa pesanan Anda telah berhasil ditambahkan ke sistem.<br>
+            Silahkan simpan bukti ini untuk referensi.
+        </p>
+
+        <div class="timestamp">
+            Dicetak pada: {{ b[13] if b[13] else 'N/A' }}
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a href="/jadwal" class="btn btn-blue">Kembali ke Jadwal</a>
+        <button type="button" onclick="downloadPDF()" class="btn btn-green">Unduh PDF</button>
+        {% if b[8] == 'Menunggu Pembayaran' %}
+        <form action="/konfirmasi_pembayaran/{{ b[0] }}" method="POST" style="flex: 1;">
+            <button type="submit" class="btn btn-green">Konfirmasi Pembayaran</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <script>
+        function downloadPDF() {
+            const element = document.getElementById('cetak-area');
+            const opsi = {
+                margin:       1,
+                filename:     'Bukti_Penambahan_{{ b[0] }}.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opsi).from(element).save();
+        }
+
+        let waktu = 600;
+        const display = document.getElementById('countdown');
+        const timer = setInterval(function () {
+            let menit = parseInt(waktu / 60, 10);
+            let detik = parseInt(waktu % 60, 10);
+            menit = menit < 10 ? '0' + menit : menit;
+            detik = detik < 10 ? '0' + detik : detik;
+            display.textContent = menit + ':' + detik;
+            if (--waktu < 0) {
+                clearInterval(timer);
+                display.textContent = '00:00';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -2,31 +2,148 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Bus Simfoni</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login - Bus Simfoni</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 380px; text-align: center; border: 1px solid #334155; }
-        h2 { color: #38bdf8; margin-bottom: 24px; font-weight: 700; }
-        label { display: block; text-align: left; margin-bottom: 6px; color: #94a3b8; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; box-sizing: border-box; }
-        input:focus { border-color: #38bdf8; outline: none; }
-        button { width: 100%; padding: 12px; background: #0ea5e9; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #0284c7; }
-        p { margin-top: 20px; color: #64748b; font-size: 14px; }
-        a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(8, 27, 27, 0.7), rgba(8, 27, 27, 0.7)), url('/static/images/bg-bus.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+            padding: 20px;
+        }
+        .title-login {
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            font-weight: 800;
+            letter-spacing: 2px;
+            font-size: 28px;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        /* Style pembungkus kolom input agar ada ikon lingkaran di ujungnya */
+        .custom-input-group {
+            position: relative;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+        .custom-input-group .form-control {
+            background: rgba(255, 255, 255, 0.12); /* Transparan tipis */
+            border: none;
+            color: #ffffff;
+            padding: 15px 25px;
+            border-radius: 50px; /* Melengkung penuh berbentuk kapsul */
+            font-size: 15px;
+            width: 100%;
+        }
+        /* Menyesuaikan padding input agar teks tidak menabrak ikon lingkaran */
+        .input-user .form-control {
+            padding-left: 65px;
+        }
+        .input-pass .form-control {
+            padding-right: 65px;
+        }
+        .custom-input-group .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .custom-input-group .form-control:focus {
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+        /* Lingkaran putih pengisi ikon */
+        .icon-circle {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #081b1b;
+            font-size: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+        .icon-left { left: 0; }
+        .icon-right { right: 0; }
+        
+        /* Tombol LOGIN Kapsul Putih */
+        .btn-login {
+            background: #ffffff;
+            color: #081b1b;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            border: none;
+            padding: 14px;
+            border-radius: 50px;
+            width: 100%;
+            font-size: 16px;
+            letter-spacing: 1px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-top: 15px;
+        }
+        .btn-login:hover {
+            background: #e2e8f0;
+            transform: scale(1.02);
+        }
+        .link-register {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .link-register:hover {
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Bus Simfoni</h2>
-        <form method="POST">
-            <label>Email Penumpang / Admin</label>
-            <input type="email" name="email" placeholder="contoh: dinda@gmail.com" required>
-            <label>Password</label>
-            <input type="password" name="password" placeholder="******" required>
-            <button type="submit">Masuk Ke Sistem</button>
-        </form>
-        <p>Belum punya akun? <a href="/daftar">Daftar Akun</a></p>
+
+<div class="login-container text-center">
+    <h2 class="title-login">USER LOGIN</h2>
+
+    <form action="/login" method="POST">
+        
+        <div class="custom-input-group input-user">
+            <div class="icon-circle icon-left">
+                <i class="bi bi-person"></i>
+            </div>
+            <input type="email" class="form-control" name="email" placeholder="Username / Email" required autocomplete="off">
+        </div>
+
+        <div class="custom-input-group input-pass">
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+            <div class="icon-circle icon-right">
+                <i class="bi bi-lock"></i>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-login">LOGIN</button>
+    </form>
+
+    <div class="mt-4">
+        <a href="/daftar" class="link-register">Belum punya akun? Hubungkan ke pendaftaran</a>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,79 +2,319 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Manifes Penumpang & Kursi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Kursi - Bus Simfoni</title>
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2 family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
-        .container { max-width: 900px; margin: 0 auto; background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; display: flex; gap: 40px; }
-        .left-panel { flex: 1.1; text-align: center; }
-        .right-panel { flex: 1; border-left: 1px solid #334155; padding-left: 40px; }
-        h3 { color: #38bdf8; margin-top: 0; }
-        .denah-bus { display: grid; grid-template-columns: repeat(2, 60px) 30px repeat(2, 60px); gap: 12px; justify-content: center; margin-top: 25px; background: #0f172a; padding: 20px; border-radius: 12px; border: 1px solid #334155; }
-        .kursi-kosong { background-color: #10b981; color: white; padding: 12px; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 14px; width: 100%; transition: 0.2s; }
-        .kursi-kosong:hover { background-color: #059669; }
-        .kursi-terisi { background-color: #ef4444; color: white; padding: 12px; border: none; cursor: not-allowed; border-radius: 8px; font-weight: bold; font-size: 14px; width: 100%; opacity: 0.6; }
-        .jalan { background: transparent; }
-        label { display: block; font-weight: 500; margin-bottom: 6px; color: #94a3b8; margin-top: 15px; font-size: 14px; }
-        input, select { width: 100%; padding: 10px; background: #0f172a; border-radius: 8px; border: 1px solid #334155; color: white; font-size: 14px; box-sizing: border-box; }
-        input:focus, select:focus { border-color: #38bdf8; outline: none; }
-        .alert-info { background: #1e3a8a; padding: 15px; border-radius: 8px; color: #93c5fd; font-size: 14px; margin-bottom: 20px; border-left: 4px solid #38bdf8; }
-        .back-btn { display: inline-block; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 14px; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(8, 27, 27, 0.7), rgba(8, 27, 27, 0.7)), url('/static/images/bg-bus.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .header-app {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .btn-back {
+            color: #ffffff;
+            font-size: 20px;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .title-app {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .route-panel {
+            background: rgba(3, 143, 236, 0.669);
+            border-radius: 16px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #0c0c0c;
+        }
+        .legend-container {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 12px;
+        }
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .box-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        .status-empty { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); }
+        .status-selected { background: #22c55e; }
+        .status-booked { background: #3b82f6; }
+
+        .bus-layout {
+            background: #ffffff;
+            color: #081b1b;
+            border-radius: 16px;
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            row-gap: 18px;
+        }
+        .seat-grid div:nth-child(5n+3) {
+            background: transparent !important;
+            visibility: hidden;
+        }
+        .seat-option {
+            position: relative;
+        }
+        .seat-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .seat-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #31586c;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .seat-option input[type="radio"]:checked + .seat-label {
+            background: #22c55e !important;
+            color: #ffffff !important;
+            border-color: #22c55e !important;
+            transform: scale(1.1);
+        }
+        .seat-option.booked .seat-label {
+            background: #3b82f6 !important;
+            color: #ffffff !important;
+            border-color: #3b82f6 !important;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* PERBAIKAN TOTAL FORM AGAR RAPI SEPERTI SCREENSHOT */
+        .form-manifes .form-group-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .form-manifes .form-label-custom {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+        .form-manifes .form-control, .form-manifes .form-select {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+            border-radius: 10px !important;
+            padding: 12px 15px !important;
+            font-size: 14px !important;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+        .form-manifes .form-select option {
+            background: #081b1b;
+            color: #ffffff;
+        }
+        .form-manifes .form-control::placeholder { color: rgba(255,255,255,0.3); }
+
+        .summary-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+            margin-top: 25px;
+        }
+        .btn-pay {
+            background: #ffffff;
+            color: #081b1b;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            border: none;
+            padding: 14px;
+            border-radius: 50px;
+            width: 100%;
+            font-size: 15px;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-pay:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <form method="POST" style="display: flex; width: 100%; gap: 40px; margin: 0;">
-            <div class="left-panel">
-                <h3>Pilih Kursi Penumpang</h3>
-                <div style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">
-                    <span style="color: #10b981;">■</span> Tersedia &nbsp;&nbsp;&nbsp; <span style="color: #ef4444;">■</span> Terisi
+
+<div class="container">
+    <div class="app-container">
+        
+        <!-- Header Atas -->
+        <div class="header-app">
+            <a href="/jadwal" class="btn-back"><i class="bi bi-arrow-left"></i></a>
+            <h1 class="title-app">Select Seat</h1>
+        </div>
+
+        <!-- Panel Info Rute Kota -->
+        <div class="route-panel">
+            <div class="small text-white-50 text-uppercase" style="font-size: 10px;">Detail Rute Perjalanan</div>
+            <div class="fw-bold fs-5 mt-1">{{ detail_jadwal[1] }} <i class="bi bi-arrow-right mx-2 text-white-50"></i> {{ detail_jadwal[2] }}</div>
+            <div class="small text-white-50 mt-1"><i class="bi bi-clock"></i> Keberangkatan Jam: <b>{{ detail_jadwal[3] }}</b></div>
+        </div>
+
+        <!-- Form Utama Pemesanan -->
+        <form action="/pilih_bangku/{{ detail_jadwal[0] }}" method="POST">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                            <div class="alert alert-warning py-2 mb-2" style="color: #7f1d1d; border: 1px solid #fecaca; background: #fef2f2;">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Pengisian Manifes Penumpang (Sudah Dibuat Rapi Kebawah/Vertikal) -->
+            <div class="form-manifes mb-4">
+                <div class="form-group-block">
+                    <label class="form-label-custom">NAMA PENUMPANG</label>
+                    <input type="text" class="form-control" name="nama_penumpang" placeholder="Nama sesuai KTP" required>
                 </div>
-                <div class="denah-bus">
-                    {% for b in semua_bangku %}
-                        {% if b in bangku_terisi %}
-                            <button type="button" class="kursi-terisi" disabled>{{ b }}</button>
+                
+                <div class="form-group-block">
+                    <label class="form-label-custom">NIK KTP</label>
+                    <input type="text" class="form-control" name="nik" placeholder="16 digit NIK" required minlength="16" maxlength="16" pattern="\d{16}">
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group-block">
+                            <label class="form-label-custom">JENIS KELAMIN</label>
+                            <select class="form-select" name="jenis_kelamin" required>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group-block">
+                            <label class="form-label-custom">METODE BAYAR</label>
+                            <select class="form-select" name="metode_bayar" required>
+                                <option value="Transfer Bank">Transfer Bank</option>
+                                <option value="E-Wallet">E-Wallet</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group-block">
+                    <label class="form-label-custom">KODE VOUCHER (OPSIONAL)</label>
+                    <input type="text" class="form-control text-uppercase" name="kode_promo" placeholder="Contoh: UNIMALKEREN">
+                </div>
+            </div>
+
+            <div class="small text-white-50 text-uppercase mb-2" style="font-size: 11px; font-weight: 600; text-align: left;">Pilih Posisi Kursi</div>
+
+            <!-- Legenda Status Kursi -->
+            <div class="legend-container">
+                <div class="legend-item"><div class="box-status status-empty"></div><span>Tersedia</span></div>
+                <div class="legend-item"><div class="box-status status-selected"></div><span>Pilihanmu</span></div>
+                <div class="legend-item"><div class="box-status status-booked"></div><span>Terisi</span></div>
+            </div>
+
+            <!-- Area Denah Kursi Putih -->
+            <div class="bus-layout">
+                <div class="text-end mb-3 text-secondary" style="font-size: 20px;">
+                    <span class="small text-muted me-1" style="font-size: 10px;">DEPAN</span> ⚙️
+                </div>
+
+                <div class="seat-grid">
+                    {% for i in range(1, 31) %}
+                        {% set b_str = i|string %}
+                        {% if b_str in bangku_terisi %}
+                            <div class="seat-option booked">
+                                <div class="seat-label">{{ i }}</div>
+                            </div>
                         {% else %}
-                            <button type="submit" name="nomor_bangku" value="{{ b }}" class="kursi-kosong" onclick="return confirm('Pesan kursi ' + this.value + ' dengan data manifes Anda?')">{{ b }}</button>
-                        {% endif %}
-                        {% if loop.index % 2 == 0 and loop.index % 4 != 0 %}
-                            <div class="jalan"></div>
+                            <div class="seat-option">
+                                <input type="radio" name="nomor_bangku" value="{{ i }}" required>
+                                <div class="seat-label">{{ i }}</div>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
 
-            <div class="right-panel">
-                <h3>Data Manifes Penumpang</h3>
-                <div class="alert-info">
-                    <b>Rute:</b> {{ detail_jadwal[1] }} → {{ detail_jadwal[2] }}<br>
-                    <b>Harga Normal:</b> Rp {{ detail_jadwal[4] }}
+            <!-- Panel Ringkasan Pembayaran -->
+            <div class="summary-panel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-start">
+                        <div class="text-white-50 small" style="font-size: 12px;">Harga Per Tiket</div>
+                        <div class="fw-bold fs-5 text-success">Rp {{ detail_jadwal[4] }}</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-white-50 small" style="font-size: 12px;">Nama Penumpang</div>
+                        <div class="fw-semibold text-white small">{{ session['nama'] }}</div>
+                    </div>
                 </div>
-                
-                <label>Nama Sesuai KTP:</label>
-                <input type="text" name="nama_penumpang" placeholder="Nama Lengkap" required>
-                
-                <label>Nomor NIK KTP:</label>
-                <input type="text" name="nik" maxlength="16" placeholder="16 Digit NIK" required>
-                
-                <label>Jenis Kelamin:</label>
-                <select name="jenis_kelamin" required>
-                    <option value="Laki-Laki">Laki-Laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                </select>
-                
-                <label>Kode Voucher Promo (Opsional):</label>
-                <input type="text" name="kode_promo" placeholder="Masukkan voucher: UNIMALKEREN">
-                
-                <label>Metode Pembayaran:</label>
-                <select name="metode_bayar" required>
-                    <option value="Transfer Bank BCA (No. Rek: 8932-112-22)">Transfer BCA (8932-112-22)</option>
-                    <option value="DANA E-Wallet (0822-1111-2222)">DANA (0822-1111-2222)</option>
-                    <option value="Bayar Tunai di Loket Terminal">Tunai di Loket Terminal</option>
-                </select>
-                <br><br>
-                <a href="/jadwal" class="back-btn">← Kembali</a>
+
+                <button type="submit" class="btn btn-pay">PROSES PEMBAYARAN</button>
             </div>
+
         </form>
+
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

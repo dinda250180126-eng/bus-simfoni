@@ -29,11 +29,13 @@
             <h2 style="margin: 0; color: #0ea5e9; font-family: sans-serif; font-weight: 800;">BUS SIMFONI TOURS</h2>
             <p style="font-size: 11px; margin: 5px 0; color: #64748b;">Manifes Validasi Mahasiswa Universitas Malikussaleh</p>
             <h3 style="margin-top: 10px; font-size: 16px;">E-TIKET RESMI PENUMPANG</h3>
+            <p style="font-size: 12px; margin: 8px 0; color: #10b981; font-weight: bold; background: #d1fae5; padding: 8px; border-radius: 4px;">✓ BUKTI PENAMBAHAN PESANAN</p>
         </div>
         
         <div class="garis"></div>
         
         <div class="flex-row"><span>No. Transaksi:</span> <span>#BS-090{{ s[0] }}</span></div>
+        <div class="flex-row"><span>Tanggal Pemesanan:</span> <span>{{ s[13] if s[13] else 'N/A' }}</span></div>
         <div class="flex-row"><span>Nama Penumpang:</span> <span><b>{{ s[1] }}</b></span></div>
         <div class="flex-row"><span>NIK KTP:</span> <span>{{ s[9] }}</span></div>
         <div class="flex-row"><span>Jenis Kelamin:</span> <span>{{ s[10] }}</span></div>
@@ -67,7 +69,7 @@
             const element = document.getElementById('cetak-area');
             const opsi = {
                 margin:       1,
-                filename:     'Tiket_Bus_Simfoni_'+{{ s[0] }}+'.pdf',
+                filename:     'Tiket_Bus_Simfoni_{{ s[0] }}.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
