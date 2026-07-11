@@ -239,15 +239,15 @@ def pilih_bangku(jadwal_id):
                 total_bayar = max(harga_asli - potongan, 0)
                 user_id = session['user_id']
 
-                cursor.execute(
-                    """
-                    INSERT INTO pesanan (
-                        penumpang_id, jadwal_id, nomor_bangku, nama_penumpang, nik,
-                        jenis_kelamin, metode_bayar, potongan, total_bayar, status, created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Menunggu Pembayaran', CURRENT_TIMESTAMP)
-                    """,
-                    (user_id, jadwal_id, nomor_bangku, nama_penumpang, nik, jenis_kelamin, metode_bayar, potongan, total_bayar),
-                )
+                #cursor.execute(
+                    #"""
+                    #INSERT INTO pesanan (
+                        #penumpang_id, jadwal_id, nomor_bangku, nama_penumpang, nik,
+                        #jenis_kelamin, metode_bayar, potongan, total_bayar, status, created_at
+                    #) #VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Menunggu Pembayaran', CURRENT_TIMESTAMP)
+                    #""",
+                    #(user_id, jadwal_id, nomor_bangku, nama_penumpang, nik, jenis_kelamin, metode_bayar, potongan, total_bayar),
+                #)
                 pesanan_id = cursor.lastrowid
 
                 return redirect(url_for('bukti_penambahan', pesanan_id=pesanan_id))
